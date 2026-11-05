@@ -38,7 +38,23 @@ Success criteria:
 /subcontracting/     Working for other builders
 /testimonials/       All testimonials
 /contact/            Contact
+/faq/                FAQs
+/heritage/           Lime & heritage work: why lime, listed buildings
+/areas/<town>/       Town pages: rye, hastings, battle, tenterden, ashford, tunbridge-wells
 ```
+
+Added on 2026-11-05 after reviewing 11 local competitors' sites:
+
+- "Free site visit & quote" call to action;
+- accreditation logos;
+- town pages;
+- FAQ;
+- a lime & heritage explainer;
+- heritage technical fields on project pages;
+- planning and design help;
+- a "send photos on WhatsApp" line on Contact.
+
+Deliberately deferred: a review-platform rating badge, and a guarantee statement, which waits until Justin confirms what he offers. Competitors' features that we already beat are listed in Appendix A.
 
 ### Global
 
@@ -46,14 +62,21 @@ Success criteria:
   - logo linking home;
   - primary nav (Home, About, Our Work, Subcontracting, Testimonials, Contact);
   - theme toggle;
-  - "Call Justin" `tel:` button.
-- **Mobile header**: the nav collapses to a disclosure button with `aria-expanded`, and the call button becomes an icon button with an accessible name.
+  - a primary "Free site visit & quote" button linking to `/contact/`.
+- **Mobile header**:
+  - The nav collapses to a disclosure button with `aria-expanded`.
+  - A gold call icon button (`tel:`, with an accessible name) stays visible.
+  - The menu panel ends with a "Free site visit & quote" button.
 - **Footer**:
   - phone, email, WhatsApp;
   - coverage area;
   - the services list;
+  - "Areas" column: links to the six town pages;
+  - "Explore" column: the nav pages plus FAQs and Lime & heritage;
+  - accreditation logo row: FMB, TrustMark, CSCS and similar, shown only for schemes Justin actually holds, each linking to its verification page;
   - company details line;
   - copyright.
+- **Main call-to-action wording**: "Free site visit & quote" is the main call to action on every page, linking to `/contact/`. A phone number is always shown next to it as a secondary option.
 - **Page structure on every page**:
   - "Skip to content" link;
   - `header`, `nav`, `main` and `footer` landmarks;
@@ -63,8 +86,10 @@ Success criteria:
 
 1. **Hero**
    - Full-bleed image, or a short muted looping video with a visible pause button.
-   - `h1` headline, the coverage-area line, and two calls to action: "Call Justin" (`tel:`) and "See our work" (`/work/`).
+   - `h1` headline and the coverage-area line.
+   - Two calls to action: "Free site visit & quote" (`/contact/`) and "See our work" (`/work/`), followed by an "Or call 07816 351074" `tel:` link.
    - The brick-corner line motif frames the hero.
+   - **Trust strip** directly below the hero: the accreditation logos plus "Fully insured · Local since [year]". It is hidden until there is data.
 2. **Services strip**: brickwork, extensions, fireplaces and chimneys, groundworks, landscaping and patios, lime and stone, drainage, new builds. Each item links to `/work/?service=<slug>`.
 3. **Featured work**: three to six project cards where `featured: true`, then a "View all work" link.
 4. **Testimonials**: two or three quotes, then a link to `/testimonials/`.
@@ -76,7 +101,11 @@ Success criteria:
 - Justin's story: intro text plus a portrait placeholder.
 - Team grid from `team.json`. Each member has a photo, name, role and a short bio.
 - "How a job runs": four steps (visit, quote, build, sign-off).
-- Coverage area: a list of counties and towns. A map is optional and out of scope for v1.
+- **Planning & design help**:
+  - We work with local architects and structural engineers on drawings, planning applications and Building Regulations sign-off.
+  - Customers get one point of contact from design to build.
+  - Copy is placeholder until Justin confirms which partners he uses.
+- Coverage area: counties plus links to the six town pages. A map is optional and out of scope for v1.
 - Accreditations and insurance block, shown only if data exists.
 
 ### Our Work `/work/`
@@ -92,6 +121,10 @@ Success criteria:
 
 - `h1` title, then a meta line: location, services, year.
 - Short description (Markdown body).
+- **Project details** box (`<dl>`):
+  - location, services, completed date, duration;
+  - for heritage jobs, optional rows: mortar (e.g. "NHL 3.5 hot-mixed lime"), joint finish (e.g. "flush, brushed"), materials (e.g. "Reclaimed red stock, Wealden sandstone") and listing (e.g. "Grade II");
+  - when a heritage row is shown, add a link to `/heritage/`.
 - **Gallery**:
   - responsive grid of thumbnails;
   - the lightbox opens on activation;
@@ -133,9 +166,50 @@ Each testimonial shows:
 
 ### Contact `/contact/`
 
+- `h1` "Book a free site visit".
 - Large `tel:`, `mailto:` and WhatsApp (`https://wa.me/44…`) links.
-- Coverage area and typical response time.
+- WhatsApp line: "Send photos straight to Justin on WhatsApp."
+- Reply-time promise, shown next to the links: "We reply within one working day". The exact wording needs Justin's confirmation.
+- Coverage area and working hours.
 - "What to send us": photos, postcode, rough scope, timescale.
+- Link to `/faq/`.
+
+### FAQs `/faq/`
+
+- Questions grouped under these headings:
+  - **Getting a quote**: Is the site visit free? How fast will I hear back? What should I send?
+  - **Working with us**: Are you insured? Do you clear up? Do you work with architects and handle planning?
+  - **Areas & timing**: Where do you work? How far ahead are you booked?
+  - **Listed & older buildings**: Do I need listed building consent? Do you work with conservation officers? Can you match old bricks and mortar?
+- Each question is a native `<details>`/`<summary>` element, closed by default, with no JS.
+- `FAQPage` JSON-LD is generated from `src/_data/faq.json`.
+- Closing call to action: "Free site visit & quote".
+
+### Lime & heritage `/heritage/`
+
+- **Why lime, not cement**:
+  - Lime is breathable and lets moisture out, where cement traps it.
+  - The mortar acts as the sacrificial element, so the bricks and stone are spared.
+  - It is flexible as the building moves.
+- **What we do**:
+  - lime repointing (joint finishes: flush, penny-struck, ribbon);
+  - rebuilding with matched bricks, flint, ragstone or Wealden sandstone;
+  - chimney and inglenook restoration;
+  - lime render.
+- **Listed buildings**: working with conservation officers, listed building consent, and matching original materials.
+- Heritage projects: project cards filtered by the `lime-stone` service.
+- Heritage credentials, shown only if held: SPAB, CITB heritage skills.
+- Call to action.
+
+### Town pages `/areas/<town>/`
+
+- One template, fed by `src/_data/areas.json`: `slug`, `name`, `county`, `intro`, `nearby[]`.
+- `h1`: "Builders in <Town>". A short, unique local intro (2–3 sentences, with no copy-pasted spam), then the services list.
+- Projects with `town: <slug>` in front matter, then local testimonials.
+- Nearby towns, linked to their pages.
+- Call to action.
+- Each town page has a `LocalBusiness` `areaServed` entry, and its own title and description.
+- The template ships with 6 towns: Rye, Hastings, Battle, Tenterden, Ashford and Tunbridge Wells.
 
 ## Content model
 
@@ -167,6 +241,12 @@ subcontract: false
 cover: { src: /assets/img/placeholder/landscape.svg, alt: "Restored brick fireplace with oak beam" }
 images:
   - { src: ..., alt: "..." }
+town: rye                          # optional, links to /areas/rye/
+heritage:                          # optional
+  mortar: NHL 3.5 hot-mixed lime
+  joints: Flush, brushed
+  materials: Reclaimed red stock brick
+  listing: Grade II
 before: { src: ..., alt: "..." }   # optional
 after:  { src: ..., alt: "..." }   # optional
 videos:
@@ -367,3 +447,31 @@ Shape and states:
 - Before/after slider.
 - Analytics. If added later, it needs a privacy notice.
 - Blog or news.
+- A review-platform rating badge (Google or Checkatrade). Deferred by Tom on 2026-11-05.
+- A guarantee/warranty statement. This waits until Justin confirms what he offers.
+
+## Appendix A: competitor review (2026-11-05)
+
+Eleven East Sussex and Kent builders were reviewed: mgmbrickwork.co.uk, equilibriumbuilding.co.uk, fortifyconstruction.co.uk, bellcoconstruction.co.uk, harlequin-building.co.uk, mightybuild.co.uk, earleconstruction.co.uk, anthony-hicks.co.uk, apollobrickwork.co.uk, limemortar-conservation.co.uk and sgtrepointingsolutions.com.
+
+Common features we lacked, and what we decided:
+
+| Feature | Seen on | Decision |
+|---|---|---|
+| Review rating badge | Fortify, Equilibrium, Mighty Oak, MGM | Deferred |
+| "Free quote" as the main call to action | MGM, Fortify, Mighty Oak | Added |
+| Accreditation logos | Fortify, Equilibrium, Bellco | Added (if held) |
+| Town pages | Equilibrium (14), Apollo (18), Mighty Oak | Added (6 towns) |
+| FAQs | Fortify, Anthony Hicks, Mighty Oak, SGT | Added |
+| Enquiry form with photo upload | MGM, Equilibrium, Apollo, Mighty Oak | Not added; WhatsApp photos line instead |
+| Guarantee | MGM, Equilibrium, Mighty Oak | Waiting for Justin |
+| Planning and architect help | Bellco, Harlequin, Anthony Hicks | Added to About |
+| Lime explainer and heritage technical detail | SGT, Fortify, Apollo | Added |
+
+Our differentiators, which no competitor or few competitors have:
+
+- a Subcontracting page (none of the 11);
+- rich project pages with before/after, video and a quote;
+- testimonials filtered by job type;
+- WhatsApp contact;
+- WCAG AA and dark mode.
