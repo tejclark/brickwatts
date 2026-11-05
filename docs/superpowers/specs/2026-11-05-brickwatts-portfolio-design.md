@@ -116,7 +116,16 @@ Copy is placeholder until Justin confirms it.
 
 ### Testimonials `/testimonials/`
 
-All testimonials, newest first. Each shows:
+All testimonials, always sorted newest first by `date`.
+
+- **Job-type filter chips**, which reuse the Our Work filter component and behaviour:
+  - "All" is the default and is active on load.
+  - The other chips are the services list plus "Subcontracting".
+  - Progressive enhancement: without JS, all testimonials show and each chip links to `?service=`.
+  - With JS, filtering happens in place, and a polite live region announces "Showing N testimonials · newest first".
+  - A testimonial matches a chip through its `service` field. Testimonials with no `service` appear only under "All".
+
+Each testimonial shows:
 
 - quote, name, town, service;
 - a link to the project if `project` is set;
@@ -175,7 +184,9 @@ Short description in Markdown.
    "date": "2025-06-01" }]
 ```
 
-`project`, `source` and `service` are optional.
+- `date` is required, because sorting depends on it.
+- `service` is a service slug or `subcontracting`, and drives the job-type filter.
+- `project` and `source` are optional.
 
 ### `src/_data/team.json`
 
@@ -200,8 +211,31 @@ These are CSS custom properties mapped into the Tailwind 4 `@theme`. The values 
 | `--surface` | `#2e3528` | `#ffffff` | Cards, bands |
 | `--text` | `#f3efe2` | `#1f2619` | Body text |
 | `--muted` | `#c9c4b0` | `#4a5240` | Secondary text |
-| `--accent` | `#c8a94c` | `#8a6d22` | Links, focus ring, underline |
-| `--accent-hi` | `#fcec97` | `#b29240` | Display gradient, decoration |
+| `--accent` | `#c8a94c` | `#7d6220` | Links, focus ring, underline, button fill |
+| `--accent-hi` | `#fcec97` | `#9a7a26` | Display gradient, decoration (large text only in light) |
+| `--on-accent` | `#1c2217` | `#ffffff` | Text on accent buttons and chips |
+| `--on-brand` / `--on-brand-accent` | `#f3efe2` / `#fcec97` | same | Text on green bands, the same in both themes |
+| `--placeholder` / `--placeholder-ink` | `#3a4232` / `#8d927f` | `#e4dfd1` / `#6b6f5f` | Media placeholders |
+
+Contrast was checked on 2026-11-05. The original light accent, `#8a6d22`, measured 4.41:1 on `--bg`, which fails AA, so it changed to `#7d6220`.
+
+| Pair | Ratio |
+|---|---|
+| Light `--accent` on `--bg` | 5.20:1 |
+| Light `--accent` on `--surface` | 5.77:1 |
+| White on light `--accent` | 5.77:1 |
+| Light `--accent-hi` on `--bg` | 3.65:1 (large text only) |
+| Dark `--accent` on `--bg` | 7.16:1 |
+| `--on-accent` on dark `--accent` | 7.16:1 |
+| `--muted` on `--bg` (dark / light) | 9.3:1 / 7.4:1 |
+
+Some areas stay dark in both themes, by locking the Dark variable mode in Figma and setting `data-theme="dark"` on the section in code:
+
+- the hero (photo plus scrim);
+- page-hero bands;
+- the subcontracting teaser;
+- CTA bands;
+- the footer.
 | `--brand` | `#2a381d` | `#2a381d` | Green band (the same in both themes) |
 | `--border` | `#3d4535` | `#ddd6c4` | Card borders, dividers |
 
@@ -215,7 +249,7 @@ Rules:
 
 | Role | Font | Notes |
 |---|---|---|
-| Headings | Archivo (variable, semi-condensed width, 600–800) | Self-hosted WOFF2 via `@fontsource-variable/archivo` |
+| Headings | Archivo (variable, 600–800) | Self-hosted WOFF2 via `@fontsource-variable/archivo`. Figma uses normal width, because semi-condensed is not available there. Code may use `font-stretch: 87.5%` if Tom prefers that look. |
 | Body / UI | Inter (variable, 400–600) | Self-hosted via `@fontsource-variable/inter` |
 
 - The fluid scale uses `clamp()` for `h1` to `h4` and for body text.
@@ -306,7 +340,8 @@ Shape and states:
   - Every page has zero axe violations, in light and in dark theme.
   - Keyboard: skip link works; the nav disclosure opens and closes; the lightbox opens, traps focus, cycles with the arrow keys, closes on Esc, and returns focus.
   - The theme toggle persists across navigation and reload, and does not flash the wrong theme.
-  - Filter: chips filter the cards and update the live region. With JS disabled, all cards show.
+  - Filter, on Our Work and Testimonials: the chips filter the items and update the live region, and "All" is the default. With JS disabled, all items show.
+  - Testimonials render in descending `date` order.
   - Reduced motion: no corner animation and no hero autoplay.
   - The YouTube facade loads the iframe only after a click.
 - **Build-time check**: the build fails on missing image `alt`.
